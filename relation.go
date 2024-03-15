@@ -38,10 +38,10 @@ func getRelation(data Data) Relation {
 	r.attr.Append(data.Attr...)
 
 	for _, fd := range data.F {
-		var src Attrs = mapset.NewSet[string]()
+		src := initAttrs()
 		src.Append(fd.Src...)
 
-		var des Attrs = mapset.NewSet[string]()
+		des := initAttrs()
 		des.Append(fd.Des...)
 
 		r.F = append(r.F, FD{src: src, des: des})
@@ -50,8 +50,13 @@ func getRelation(data Data) Relation {
 	return r
 }
 
+func initAttrs() Attrs {
+	var attrs Attrs = mapset.NewSet[string]()
+	return attrs
+}
+
 func (r Relation) getClosure(attrs Attrs) Attrs {
-	var c Attrs = mapset.NewSet[string]()
+	c := initAttrs()
 	c.Append(attrs.ToSlice()...)
 
 	for {
@@ -77,7 +82,7 @@ func allSubsets(attrs Attrs) mapset.Set[Attrs] {
 	attrSlice := attrs.ToSlice()
 
 	for i := 0; i < (1 << n); i++ {
-		var subset Attrs = mapset.NewSet[string]()
+		subset := initAttrs()
 
 		for j, a := range attrSlice {
 			if (i & (1 << j)) != 0 {
@@ -96,7 +101,7 @@ func allSubsets(attrs Attrs) mapset.Set[Attrs] {
 func (r Relation) findAllSuperKeys() mapset.Set[Attrs] {
 	subsets := allSubsets(r.attr)
 
-	var emptySet Attrs = mapset.NewSet[string]()
+	emptySet := initAttrs()
 	subsets.Remove(emptySet)
 
 	superKeys := mapset.NewSet[Attrs]()

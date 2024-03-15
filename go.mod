@@ -1,4 +1,4 @@
-module db-design-theory
+module github.com/sendahuang14/db-design-theory
 
 go 1.21.8
 
