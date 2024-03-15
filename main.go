@@ -18,6 +18,6 @@ func main() {
 	data := parseJson("data.json")
 	r := getRelation(data)
 
-	superKeys := r.findAllKeys()
+	superKeys := r.findKeys()
 	fmt.Println(superKeys)
 }

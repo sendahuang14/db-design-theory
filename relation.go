@@ -44,7 +44,10 @@ func getRelation(data Data) Relation {
 		des := initAttrs()
 		des.Append(fd.Des...)
 
-		r.F = append(r.F, FD{src: src, des: des})
+		// don't add trivial FDs
+		if !des.IsSubset(src) {
+			r.F = append(r.F, FD{src: src, des: des})
+		}
 	}
 
 	return r
@@ -98,7 +101,7 @@ func allSubsets(attrs Attrs) mapset.Set[Attrs] {
 	return s
 }
 
-func (r Relation) findAllSuperKeys() mapset.Set[Attrs] {
+func (r Relation) findSuperKeys() mapset.Set[Attrs] {
 	subsets := allSubsets(r.attr)
 
 	emptySet := initAttrs()
@@ -115,8 +118,8 @@ func (r Relation) findAllSuperKeys() mapset.Set[Attrs] {
 	return superKeys
 }
 
-func (r Relation) findAllKeys() mapset.Set[Attrs] {
-	superKeys := r.findAllSuperKeys()
+func (r Relation) findKeys() mapset.Set[Attrs] {
+	superKeys := r.findSuperKeys()
 
 	keys := mapset.NewSet[Attrs]()
 
@@ -135,4 +138,16 @@ func (r Relation) findAllKeys() mapset.Set[Attrs] {
 	}
 
 	return keys
+}
+
+func (r Relation) findPrimes() Attrs {
+	keys := r.findKeys()
+
+	primes := initAttrs()
+
+	for k := range keys.Iter() {
+		primes.Append(k.ToSlice()...)
+	}
+
+	return primes
 }

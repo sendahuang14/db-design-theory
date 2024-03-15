@@ -63,7 +63,7 @@ func Test_allSubsets(t *testing.T) {
 func Test_findAllSuperKeys(t *testing.T) {
 	r1 := data1()
 
-	sk1 := r1.findAllSuperKeys()
+	sk1 := r1.findSuperKeys()
 
 	if sk1.Cardinality() != 8 {
 		t.Error("There should be 8 super-keys in data1")
@@ -82,7 +82,7 @@ func Test_findAllSuperKeys(t *testing.T) {
 func Test_findAllKeys(t *testing.T) {
 	r1 := data1()
 
-	k1 := r1.findAllKeys()
+	k1 := r1.findKeys()
 
 	if k1.Cardinality() != 1 {
 		t.Error("There should be 1 key in data1")
